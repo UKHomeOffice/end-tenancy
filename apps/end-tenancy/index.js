@@ -71,11 +71,7 @@ module.exports = {
         name: {
           fields: [
             'name'
-          ],
-          locals: {
-            section: 'tenant-name',
-            subsection: 'tenant-name-hint'
-          }
+          ]
         },
         date: {
           template: 'date',
@@ -84,19 +80,12 @@ module.exports = {
             'date-left-day',
             'date-left-month',
             'date-left-year'
-          ],
-          locals: {
-            section: 'tenant-date-left',
-            subsection: 'tenant-date-left-hint'
-          }
+          ]
         },
         'add-another': {
           fields: [
             'add-another'
-          ],
-          locals: {
-            section: 'add-another'
-          }
+          ]
         }
       },
       loopCondition: {

@@ -98,11 +98,4 @@ module.exports = class LoopController extends DateController {
     }
     return super.saveValues(req, res, callback);
   }
-
-  locals(req, res) {
-    return Object.assign({},
-      super.locals(req, res),
-      this.options.subSteps[req.params.action].locals
-    );
-  }
 };

@@ -35,6 +35,7 @@ module.exports = {
   },
   name: {
     mixin: 'input-text',
+    labelClassName: 'visuallyhidden',
     validate: 'required'
   },
   'date-left': {
