@@ -4,7 +4,7 @@
     "report": "Placeholder text for <a href=\"{{report-link}}\">make a report</a>"
   },
   "report-nldp-date": {
-    "header": "What was the date of issue for the Notice?"
+    "intro": "If you have another Notice you can add this later."
   },
   "address-lookup": {
     "cantfind": "I can't find my address in the list",
@@ -17,14 +17,9 @@
   "report-property-address": {
     "header": "What's the address of the property the person has left"
   },
-  "tenant-name": {
-    "header": "What's the name of the person who left the property?"
-  },
-  "tenant-name-hint": {
-    "header": "You can add more people later if required"
-  },
-  "tenant-date-left": {
-    "header": "When did {{values.name}} leave?"
+  "tenant-details": {
+    "header": "What's the name of the person who left the property?",
+    "intro": "You can add more people later if required"
   },
   "tenant-date-left-hint": {
     "header": "If you don't know the exact date then please put the first date you knew they had left."
