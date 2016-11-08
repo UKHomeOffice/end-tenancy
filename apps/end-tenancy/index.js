@@ -146,6 +146,9 @@ module.exports = {
     '/agent-address': {
       next: '/confirm'
     },
+    confirm: {
+      next: '/confirmation'
+    },
     '/request-property-address': {},
     '/check-nldp-date': {},
     '/confirmation': {}
