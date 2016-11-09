@@ -69,5 +69,39 @@ module.exports = {
     ],
     includeInSummary: false
   },
-  'landlord-address': {}
+  'landlord-address': {},
+  who: {
+    mixin: 'radio-group',
+    validate: 'required',
+    legend: {
+      className: 'visuallyhidden'
+    },
+    options: [
+      'landlord',
+      'agent'
+    ]
+  },
+  'landlord-name': {
+    mixin: 'input-text',
+    validate: 'required'
+  },
+  'landlord-company': {
+    mixin: 'input-text'
+  },
+  'agent-company': {
+    mixin: 'input-text',
+    validate: 'required'
+  },
+  'agent-name': {
+    mixin: 'input-text',
+    validate: 'required'
+  },
+  'email-address': {
+    mixin: 'input-text',
+    validate: ['required', 'email']
+  },
+  'phone-number': {
+    mixin: 'input-text',
+    validate: ['required', 'numeric']
+  }
 };

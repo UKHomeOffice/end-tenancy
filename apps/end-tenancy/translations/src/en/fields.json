@@ -71,6 +71,36 @@
       }
     }
   },
+  "who": {
+    "legend": "Who are you?",
+    "options": {
+      "landlord": {
+        "label": "Landlord"
+      },
+      "agent": {
+        "label": "Agent acting on behalf of a landlord"
+      }
+    }
+  },
+  "landlord-name": {
+    "label": "Your full name"
+  },
+  "landlord-company": {
+    "label": "Your company's name",
+    "hint": "(if you have one, if you don't leave blank)"
+  },
+  "agent-name": {
+    "label": "Your full name"
+  },
+  "agent-company": {
+    "label": "Your company's name"
+  },
+  "email-address": {
+    "label": "Your email address"
+  },
+  "phone-number": {
+    "label": "Your phone number"
+  },
   "landlord-address-postcode": {
     "label": "Postcode"
   },

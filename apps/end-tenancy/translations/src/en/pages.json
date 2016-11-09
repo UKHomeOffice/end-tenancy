@@ -28,6 +28,12 @@
   "tenant-details-add-another": {
     "header": "Has anyone else listed on the Notice left the property?"
   },
+  "landlord-details": {
+    "header": "Landlord details"
+  },
+  "agent-details": {
+    "header": "Agent details"
+  },
   "landlord-address": {
     "header": "What's your contact address?"
   },

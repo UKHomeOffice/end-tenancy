@@ -101,10 +101,26 @@ module.exports = {
       }
     },
     '/report-landlord-agent': {
+      fields: [
+        'who'
+      ],
+      next: '/landlord-details',
+      forks: [{
+        target: '/agent-details',
+        condition: {
+          field: 'who',
+          value: 'agent'
+        }
+      }]
+    },
+    '/landlord-details': {
       next: '/landlord-address',
-      locals: {
-        section: 'landlord-details'
-      }
+      fields: [
+        'landlord-name',
+        'landlord-company',
+        'email-address',
+        'phone-number'
+      ]
     },
     '/landlord-address': {
       controller: require('./controllers/address-lookup'),
@@ -118,12 +134,17 @@ module.exports = {
         section: 'landlord-details'
       }
     },
-    '/confirm': {
-      controller: require('./controllers/confirm'),
-      next: '/confirmation',
-      fieldsConfig: require('./fields'),
-      emailConfig: require('../../config').email,
-      customerEmailField: 'email-address'
+    '/agent-details': {
+      fields: [
+        'agent-company',
+        'agent-name',
+        'email-address',
+        'phone-number'
+      ],
+      next: '/agent-address'
+    },
+    '/agent-address': {
+      next: '/confirm'
     },
     '/request-property-address': {},
     '/check-nldp-date': {},
