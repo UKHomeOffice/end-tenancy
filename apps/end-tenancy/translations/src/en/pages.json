@@ -17,13 +17,21 @@
   "report-property-address": {
     "header": "What's the address of the property the person has left"
   },
-  "tenant-date-left-hint": {
-    "header": "If you don't know the exact date then please put the first date you knew they had left."
+  "tenant-details-name": {
+    "header": "What's the name of the person who left the property?",
+    "intro": "You can add more people later if required"
   },
-  "add-another": {
+  "tenant-details-date": {
+    "header": "When did {{values.name}} leave?",
+    "intro": "If you don't know the exact date then please put the first date you knew they had left."
+  },
+  "tenant-details-add-another": {
     "header": "Has anyone else listed on the Notice left the property?"
   },
   "landlord-address": {
     "header": "What's your contact address?"
+  },
+  "tenant-property": {
+    "header": "Tenant and property details"
   }
 }

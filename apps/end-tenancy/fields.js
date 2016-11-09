@@ -25,14 +25,18 @@ module.exports = {
     labelClassName: 'visuallyhidden'
   },
   'report-nldp-date-day': {
-    validate: ['required', 'numeric']
+    validate: ['required', 'numeric'],
+    includeInSummary: false
   },
   'report-nldp-date-month': {
-    validate: ['required', 'numeric']
+    validate: ['required', 'numeric'],
+    includeInSummary: false
   },
   'report-nldp-date-year': {
-    validate: ['required', 'numeric']
+    validate: ['required', 'numeric'],
+    includeInSummary: false
   },
+  'property-address': {},
   name: {
     mixin: 'input-text',
     labelClassName: 'visuallyhidden',
@@ -64,5 +68,6 @@ module.exports = {
       'no'
     ],
     includeInSummary: false
-  }
+  },
+  'landlord-address': {}
 };

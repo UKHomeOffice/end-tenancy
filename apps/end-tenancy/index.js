@@ -49,6 +49,9 @@ module.exports = {
     },
     '/report-property-address': {
       controller: require('./controllers/address-lookup'),
+      fields: [
+        'property-address'
+      ],
       addressKey: 'property-address',
       next: '/tenant-details',
       locals: {
@@ -106,14 +109,17 @@ module.exports = {
     '/landlord-address': {
       controller: require('./controllers/address-lookup'),
       addressKey: 'landlord-address',
+      fields: [
+        'landlord-address'
+      ],
       previousAddress: 'property-address',
       next: '/confirm',
       locals: {
-        section: 'tenant-property'
+        section: 'landlord-details'
       }
     },
     '/confirm': {
-      controller: controllers.confirm,
+      controller: require('./controllers/confirm'),
       next: '/confirmation',
       fieldsConfig: require('./fields'),
       emailConfig: require('../../config').email,

@@ -3,7 +3,23 @@
 'use strict';
 
 const _ = require('lodash');
+const Hogan = require('hogan.js');
 const DateController = require('hof').controllers.date;
+
+function hoganRender(input, ctx) {
+  if (input) {
+    return Hogan.compile(input).render(ctx);
+  }
+  return undefined;
+}
+
+function conditionalTranslate(key, t) {
+  const result = t(key);
+  if (result !== key) {
+    return result;
+  }
+  return undefined;
+}
 
 module.exports = class LoopController extends DateController {
 
@@ -97,5 +113,16 @@ module.exports = class LoopController extends DateController {
       return callback();
     }
     return super.saveValues(req, res, callback);
+  }
+
+  locals(req, res) {
+    const locals = super.locals(req, res);
+    const pagePath = `${locals.route}-${req.params.action}`;
+    const title = hoganRender(conditionalTranslate(`pages.${pagePath}.header`, req.translate), res.locals);
+    const intro = hoganRender(conditionalTranslate(`pages.${pagePath}.intro`, req.translate), res.locals);
+    return Object.assign({}, locals, {
+      title,
+      intro
+    });
   }
 };
