@@ -160,9 +160,6 @@ module.exports = {
     '/confirm': {
       next: '/confirmation'
     },
-    confirm: {
-      next: '/confirmation'
-    },
     '/request-property-address': {},
     '/check-nldp-date': {},
     '/confirmation': {}
