@@ -130,6 +130,10 @@ module.exports = {
       ],
       previousAddress: 'property-address',
       next: '/confirm',
+      useWhen: {
+        field: 'who',
+        value: 'landlord'
+      },
       locals: {
         section: 'landlord-details'
       }
@@ -155,6 +159,9 @@ module.exports = {
       }
     },
     '/landlord-name': {
+      fields: [
+        'landlord-name'
+      ],
       next: '/landlord-address'
     },
     '/confirm': {
