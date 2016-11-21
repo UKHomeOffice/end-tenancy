@@ -80,7 +80,12 @@
     "required": "Select an address"
   },
   "landlord-address": {
-    "required": "Enter the address"
+    "required": {
+      "who": {
+        "landlord": "Enter your address"
+      },
+      "default": "Enter the address"
+    }
   },
   "declaration-identity": {
     "required": {
