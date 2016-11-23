@@ -229,7 +229,7 @@ Scenario('I am taken to the name page if I delete the only tenant', (
   I.seeInCurrentUrl(tenantDetailsPage.name.url);
 });
 
-Scenario.only('I dont see a delete button if I delete all tenants', (
+Scenario('I dont see a delete button if I delete all tenants', (
   I,
   tenantDetailsPage
 ) => {

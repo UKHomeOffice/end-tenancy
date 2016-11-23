@@ -33,7 +33,7 @@ module.exports = class LoopController extends DateController {
   }
 
   stepIncluded(step) {
-    return Object.keys(this.options.subSteps).indexOf(step) > -1
+    return Object.keys(this.options.subSteps).indexOf(step) > -1;
   }
 
   get(req, res, callback) {
