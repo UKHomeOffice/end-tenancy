@@ -9,7 +9,8 @@
   },
   "property-address-postcode": {
     "required": "Enter the postcode",
-    "postcode": "Enter a valid postcode"
+    "postcode": "Enter a valid postcode",
+    "country": "This postcode is not in England. This legislation currently only applies to properties in England"
   },
   "property-address-select": {
     "required": "Select an address"
