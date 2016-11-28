@@ -35,8 +35,7 @@
         "report": "What's the address of the property the person has left?"
       },
       "default": "What's the property address?"
-    },
-    "intro": "A NLDPs only relate to properties in England. If the property in question is in Scotland, Wales or Northern Ireland, you do not need to use this service yet. There is currently no implementation date for the legislation in these parts of the UK."
+    }
   },
   "tenant-details": {
     "summary-title": "Tenants"
