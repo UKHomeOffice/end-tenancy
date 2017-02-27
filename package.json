@@ -62,7 +62,6 @@
     "mocha-multi": "^0.7.1",
     "nodemon": "^1.9.2",
     "npm-run-all": "^1.7.0",
-    "phantomjs": "^2.1.7",
     "pre-commit": "^1.0.10",
     "proxyquire": "^1.5.0",
     "sinomocha": "^0.2.4",
