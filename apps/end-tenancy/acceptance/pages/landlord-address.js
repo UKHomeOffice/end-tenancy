@@ -10,22 +10,17 @@ module.exports = {
   },
 
   url: 'landlord-address',
+
   postcode: {
-    url: '/postcode',
     fields: {
       postcode: '#landlord-address-postcode',
       usePrevious: '#use-previous-address'
     },
     content: {
-      invalid: 'xxxxxx',
-      valid: 'CR0 2EU',
-      notFound: 'AA1 1AA',
-      belfast: 'BT11 1AB'
+      valid: 'CR0 2EU'
     }
   },
   lookup: {
-    url: '/lookup',
-
     fields: {
       'address-select': '#landlord-address-select'
     },
@@ -33,22 +28,6 @@ module.exports = {
     content: {
       'address-select': '49 Sydenham Road, Croydon, CR0 2EU'
     }
-  },
-  address: {
-    url: '/address',
-    failedMessage: '.alert-info',
-    content: '49 Sydenham Road\nCroydon\nCR0 2EU'
-  },
-  manual: {
-    url: '/manual',
-    fields: {
-      address: '#landlord-address'
-    }
-  },
-
-  links: {
-    'change-postcode': '.change-postcode',
-    'cant-find': '.cant-find'
   },
 
   enterValidPostcode() {
