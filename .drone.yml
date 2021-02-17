@@ -10,6 +10,8 @@ steps:
   commands:
   - npm --loglevel warn install
   - npm test
+  when:
+    event: push
 
 - name: build_end_tenancy
   pull: if-not-exists
