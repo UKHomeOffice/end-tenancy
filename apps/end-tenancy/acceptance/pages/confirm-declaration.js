@@ -27,7 +27,9 @@ module.exports = {
 
   'report-landlord': {
     what: 'Report that a disqualified person has left your property',
-    'property-address': '123 Example Street Example',
+    building: '5 Street',
+    townOrCity: 'Town',
+    postcode : 'CR02EU',
     tenants: {
       0: {
         name: 'Sterling Archer',
@@ -38,12 +40,16 @@ module.exports = {
     'landlord-company': 'UK Home Office',
     'landlord-email-address': 'sterling@archer.com',
     'landlord-phone-number': '01234567890',
-    'landlord-address': '123 Example Street Example'
+    'landlord-building': '5 Street',
+    'landlord-townOrCity': 'Town',
+    'landlord-postcode': 'CR02EU'
   },
 
   'report-agent': {
     what: 'Report that a disqualified person has left your property',
-    'property-address': '123 Example Street Example',
+    building: '5 Street',
+    townOrCity: 'Town',
+    postcode : 'CR0 2EU',
     tenants: {
       0: {
         name: 'Sterling Archer',
@@ -59,12 +65,16 @@ module.exports = {
     'agent-email-address': 'agent@agent.com',
     'agent-phone-number': '01234567890',
     'landlord-name': 'Fred Bloggs',
-    'landlord-address': '123 Example Street Example'
+    'landlord-building': '5 Street',
+    'landlord-townOrCity': 'Town',
+    'landlord-postcode': 'CR0 2EU'
   },
 
   'check-landlord': {
     what: 'Check if a person living in your property is still disqualified from renting',
-    'property-address': '123 Example Street Example',
+    building: '5 Street',
+    townOrCity: 'Town',
+    postcode : 'CR0 2EU',
     tenants: {
       0: {
         name: 'Sterling Archer'
@@ -74,7 +84,9 @@ module.exports = {
     'landlord-company': 'UK Home Office',
     'landlord-email-address': 'sterling@archer.com',
     'landlord-phone-number': '01234567890',
-    'landlord-address': '123 Example Street Example'
+    'landlord-building': '5 Street',
+    'landlord-townOrCity': 'Town',
+    'landlord-postcode': 'CR0 2EU'
   },
 
   setSessionData(name, data) {

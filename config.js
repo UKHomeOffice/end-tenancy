@@ -16,13 +16,13 @@ module.exports = {
       process.env.POSTCODE_HOST
   },
   email: {
-    caseworker: process.env.CASEWORKER_EMAIL || '',
-    from: process.env.FROM_ADDRESS || '',
-    replyTo: process.env.REPLY_TO || '',
+    caseworker: process.env.CASEWORKER_EMAIL || 't@c.com',
+    from: process.env.FROM_ADDRESS || 't@c.com',
+    replyTo: process.env.REPLY_TO || 't@c.com',
     transport: process.env.EMAIL_TRANSPORT || 'ses',
     transportOptions: {
-      accessKeyId: process.env.AWS_USER || '',
-      secretAccessKey: process.env.AWS_PASSWORD || '',
+      accessKeyId: process.env.AWS_USER || 'ses',
+      secretAccessKey: process.env.AWS_PASSWORD || 'ses',
       region: process.env.EMAIL_REGION || '',
       port: process.env.EMAIL_PORT || '',
       host: process.env.EMAIL_HOST || '',
