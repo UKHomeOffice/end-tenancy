@@ -24,7 +24,7 @@ Scenario.only('I see the correct table information if I am a landlord reporting 
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario('I see the correct table information if I am an agent reporting 2 tenants left', function *(
+Scenario.only('I see the correct table information if I am an agent reporting 2 tenants left', function *(
   I,
   confirmDeclarationPage
 ) {
@@ -36,7 +36,7 @@ Scenario('I see the correct table information if I am an agent reporting 2 tenan
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario('I see the correct table information if I am a landlord checking a single tenant', function *(
+Scenario.only('I see the correct table information if I am a landlord checking a single tenant', function *(
   I,
   confirmDeclarationPage
 ) {
@@ -48,7 +48,7 @@ Scenario('I see the correct table information if I am a landlord checking a sing
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario('I see the correct table information if I am a landlord checking a single tenant TEST', function *(
+Scenario.only('I see the correct table information if I am a landlord checking a single tenant TEST', function *(
   I,
   confirmDeclarationPage
 ) {
