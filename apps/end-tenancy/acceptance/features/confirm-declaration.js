@@ -2,7 +2,7 @@
 
 const steps = require('../../');
 
-Feature('Confirm Declaration Page');
+Feature.only('Confirm Declaration Page');
 
 Before((
   I,
@@ -11,7 +11,7 @@ Before((
   I.visitPage(confirmDeclarationPage, steps);
 });
 
-Scenario.only('I see the correct table information if I am a landlord reporting 1 tenant left', function *(
+Scenario('I see the correct table information if I am a landlord reporting 1 tenant left', function *(
   I,
   confirmDeclarationPage
 ) {
@@ -24,7 +24,7 @@ Scenario.only('I see the correct table information if I am a landlord reporting 
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario.only('I see the correct table information if I am an agent reporting 2 tenants left', function *(
+Scenario('I see the correct table information if I am an agent reporting 2 tenants left', function *(
   I,
   confirmDeclarationPage
 ) {
@@ -36,7 +36,7 @@ Scenario.only('I see the correct table information if I am an agent reporting 2 
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario.only('I see the correct table information if I am a landlord checking a single tenant', function *(
+Scenario('I see the correct table information if I am a landlord checking a single tenant', function *(
   I,
   confirmDeclarationPage
 ) {
@@ -48,7 +48,7 @@ Scenario.only('I see the correct table information if I am a landlord checking a
   I.seeInCurrentUrl('/confirmation');
 });
 
-Scenario.only('I see the correct table information if I am a landlord checking a single tenant TEST', function *(
+Scenario('I see the correct table information if I am a landlord checking a single tenant TEST', function *(
   I,
   confirmDeclarationPage
 ) {
