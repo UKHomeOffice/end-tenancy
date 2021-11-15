@@ -19,8 +19,8 @@ Scenario.only('I see the correct table information if I am a landlord reporting 
   yield I.refreshPage();
   confirmDeclarationPage.checkData('report-landlord');
   yield I.dontSee('Date of birth');
-  yield I.checkOption(confirmDeclarationPage.fields.declaration);
-  yield I.submitForm();
+  I.checkOption(confirmDeclarationPage.fields.declaration);
+  I.submitForm();
   I.seeInCurrentUrl('/confirmation');
 });
 
