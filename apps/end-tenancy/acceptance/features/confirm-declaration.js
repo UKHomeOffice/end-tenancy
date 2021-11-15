@@ -2,7 +2,7 @@
 
 const steps = require('../../');
 
-Feature.only('Confirm Declaration Page');
+Feature('Confirm Declaration Page');
 
 Before((
   I,
