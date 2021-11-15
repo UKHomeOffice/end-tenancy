@@ -78,8 +78,8 @@ Scenario.only('I see the correct table information if I am a landlord checking a
     name: 'John Smith',
   });
   I.seeInCurrentUrl('/confirm-declaration');
-  yield I.checkOption(confirmDeclarationPage.fields.declaration);
-  yield I.submitForm();
+  I.checkOption(confirmDeclarationPage.fields.declaration);
+  I.submitForm();
   I.seeInCurrentUrl('/confirmation');
 });
 

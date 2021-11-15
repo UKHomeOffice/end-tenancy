@@ -20,7 +20,7 @@ Before((
   I.amOnPage('/');
 });
 
-Scenario.only('An applicaton can be completed end-to-end', (
+Scenario('An applicaton can be completed end-to-end', (
   I
 ) => {
   I.completeToStep('/confirmation', values);
