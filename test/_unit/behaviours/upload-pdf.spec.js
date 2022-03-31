@@ -1,12 +1,13 @@
 
-describe('Base Upload PDF Behaviour', () => {
+describe('Upload PDF Behaviour', () => {
   const mockData = '<html></html>';
 
   const getProxyquiredInstance = (overrides, behaviourConfig) => {
-    overrides['../translations/src/en/pages.json'] = overrides['../translations/src/en/pages.json'] ||
-      { pages: { confirm: { sections: {} } }, '@noCallThru': true };
+    overrides['../../end-tenancy/translations/src/en/pages.json'] =
+      overrides['../../end-tenancy/translations/src/en/pages.json'] ||
+      { confirm: { sections: {} }, '@noCallThru': true };
 
-    const Behaviour = proxyquire('../apps/end-tenancy/behaviours/upload-pdf-new', overrides);
+    const Behaviour = proxyquire('../apps/end-tenancy/behaviours/upload-pdf', overrides);
 
     const defaults =
       {
@@ -63,22 +64,20 @@ describe('Base Upload PDF Behaviour', () => {
           section: 'Notice requested for',
           fields: [
             {
-              label: 'Full name'
+              label: 'Have you ever been convicted of a crime in the UK?'
             }
           ]
         }
       ];
 
       const orderedSections = {
-        pages: {
-          confirm: {
-            sections: {
-              'key-details': {
-                header: 'Key details'
-              },
-              'tenants-left': {
-                header: 'Notice requested for'
-              }
+        confirm: {
+          sections: {
+            'key-details': {
+              header: 'Key details'
+            },
+            'tenants-left': {
+              header: 'Notice requested for'
             }
           }
         },
@@ -99,7 +98,7 @@ describe('Base Upload PDF Behaviour', () => {
 
       const instance = getProxyquiredInstance({
         fs: fsMock,
-        '../translations/src/en/pages.json': orderedSections
+        '../../end-tenancy/translations/src/en/pages.json': orderedSections
       });
 
       await instance.renderHTML(req, res, mockLocals);
@@ -110,7 +109,7 @@ describe('Base Upload PDF Behaviour', () => {
       const actualLocals = res.render.firstCall.args[1];
       actualLocals.rows.should.eql(expectedRows);
       actualLocals.htmlLang.should.eql('en');
-      actualLocals.title.should.eql('Refugee integration loan application');
+      actualLocals.title.should.eql('Check your answers');
     });
 
     it('should call sortSections when sortSections is true ', async () => {
@@ -214,7 +213,7 @@ describe('Base Upload PDF Behaviour', () => {
 
       const instance = getProxyquiredInstance({
         fs: fsMock,
-        '../../../lib/utilities': notifyClientMock,
+        '../../../lib/utils': notifyClientMock,
         '../../../config': configMock
       });
       const bufferData = Buffer.from(mockData);
@@ -222,7 +221,7 @@ describe('Base Upload PDF Behaviour', () => {
       instance.sendReceipt = sinon.stub().resolves();
       instance.notifyByEmail = sinon.stub().resolves();
 
-      await instance.sendEmailWithAttachment(req, bufferData);
+      await instance.sendCaseworkerEmailWithAttachment(req, bufferData);
 
       const expectedEmailContent = {
         personalisation: {
