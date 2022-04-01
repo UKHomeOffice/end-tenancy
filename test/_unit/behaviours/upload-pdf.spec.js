@@ -7,7 +7,7 @@ describe('Upload PDF Behaviour', () => {
       overrides['../../end-tenancy/translations/src/en/pages.json'] ||
       { confirm: { sections: {} }, '@noCallThru': true };
 
-    const Behaviour = proxyquire('../apps/end-tenancy/behaviours/upload-pdf', overrides);
+    const Behaviour = proxyquire('../apps/end-tenancy/models/upload-pdf', overrides);
 
     const defaults =
       {
@@ -20,12 +20,62 @@ describe('Upload PDF Behaviour', () => {
     return new Behaviour(defaults);
   };
 
-  describe('renderHtml', () => {
-    let fsMock;
+  const orderedSections = {
+    confirm: {
+      sections: {
+        'key-details': {
+          header: 'Key details'
+        },
+        'tenants-left': {
+          header: 'Notice requested for'
+        }
+      }
+    },
+    '@noCallThru': true
+  };
 
-    afterEach(() => {
-      sinon.restore();
-    });
+  const inputRows = [
+    {
+      section: 'Notice requested for',
+      fields: [
+        {
+          label: 'Have you ever been convicted of a crime in the UK?'
+        }
+      ]
+    },
+    {
+      section: 'Key details'
+    }
+  ];
+
+  const mockLocals = {
+    fields: [],
+    route: 'confirm',
+    baseUrl: '/',
+    title: 'Check your answers',
+    intro: null,
+    nextPage: '/complete',
+    feedbackUrl: '/feedback?f_t=eyJiYXNlVXJsIjoiL2FwcGx5IiwicGF0aCI6Ii9jb25maXJtIiwidXJsIjoiL2FwcGx5L2N' +
+      'vbmZpcm0ifQ%3D%3D',
+    rows: inputRows
+  };
+
+  const expectedRows = [
+    {
+      section: 'Key details'
+    },
+    {
+      section: 'Notice requested for',
+      fields: [
+        {
+          label: 'Have you ever been convicted of a crime in the UK?'
+        }
+      ]
+    }
+  ];
+
+  describe('#renderHtml', () => {
+    let fsMock;
 
     beforeEach(() => {
       fsMock = {
@@ -33,6 +83,9 @@ describe('Upload PDF Behaviour', () => {
       };
     });
 
+    afterEach(() => {
+      sinon.restore();
+    });
 
     it('should send the correct locals and ordered rows to renderHTML', async () => {
       const req = request({ form: { options: {} }, session: {} });
@@ -41,60 +94,6 @@ describe('Upload PDF Behaviour', () => {
         cb(null, {});
       }
       );
-
-      const inputRows = [
-        {
-          section: 'Notice requested for',
-          fields: [
-            {
-              label: 'Have you ever been convicted of a crime in the UK?'
-            }
-          ]
-        },
-        {
-          section: 'Key details'
-        }
-      ];
-
-      const expectedRows = [
-        {
-          section: 'Key details'
-        },
-        {
-          section: 'Notice requested for',
-          fields: [
-            {
-              label: 'Have you ever been convicted of a crime in the UK?'
-            }
-          ]
-        }
-      ];
-
-      const orderedSections = {
-        confirm: {
-          sections: {
-            'key-details': {
-              header: 'Key details'
-            },
-            'tenants-left': {
-              header: 'Notice requested for'
-            }
-          }
-        },
-        '@noCallThru': true
-      };
-
-      const mockLocals = {
-        fields: [],
-        route: 'confirm',
-        baseUrl: '/',
-        title: 'Check your answers',
-        intro: null,
-        nextPage: '/complete',
-        feedbackUrl: '/feedback?f_t=eyJiYXNlVXJsIjoiL2FwcGx5IiwicGF0aCI6Ii9jb25maXJtIiwidXJsIjoiL2FwcGx5L2N' +
-          'vbmZpcm0ifQ%3D%3D',
-        rows: inputRows
-      };
 
       const instance = getProxyquiredInstance({
         fs: fsMock,
@@ -160,86 +159,91 @@ describe('Upload PDF Behaviour', () => {
     });
   });
 
-  describe('sendEmail', () => {
-    const configMock = {
-      govukNotify: {
-        caseworkerEmail: 'mock-case-worker@example.org',
-        templateForm: {
-          accept: 'template-id',
-          apply: 'template-id'
+  describe('#save', () => {
+    let fsMock;
+    let instance;
+    let pdfConverterStub;
+    let fileVaultStub;
+    let pdfSetStub;
+    let pdfSaveStub;
+    let fvSetStub;
+    let fvSaveStub;
+    let req;
+    let res;
+
+    beforeEach(() => {
+      fsMock = {
+        readFile: sinon.stub().callsFake((p, cb) => cb(null, mockData))
+      };
+      req = request();
+      res = response();
+      res.render = sinon.stub().callsFake((template, values, cb) => {
+        cb(null, 'html-data');
+      });
+      pdfSetStub = sinon.stub();
+      pdfSaveStub = sinon.stub().resolves('pdf-data');
+      fvSetStub = sinon.stub();
+      fvSaveStub = sinon.stub().resolves({ url: 'fv-url' });
+
+      pdfConverterStub = sinon.stub().returns({ set: pdfSetStub, save: pdfSaveStub });
+      fileVaultStub = sinon.stub().returns({ set: fvSetStub, save: fvSaveStub });
+
+      instance = getProxyquiredInstance({
+        hof: { apis: { pdfConverter: pdfConverterStub } },
+        '../../../lib/utils': {
+          FileVaultModel: fileVaultStub
         },
-        notifyApiKey: 'mock-api-key'
-      }
-    };
+        fs: fsMock,
+        '../../end-tenancy/translations/src/en/pages.json': orderedSections
+      });
+    });
 
     afterEach(() => {
       sinon.restore();
     });
 
-    let sendEmailStub;
-    let prepareUploadStub;
-    let notifyClientMock;
-    let fsMock;
+    it('should call the pdf uploader with html data and save it', async () => {
+      await instance.save(req, res, mockLocals);
 
-    beforeEach(() => {
-      sendEmailStub = sinon.stub().callsFake(() => Promise.resolve({}));
-      prepareUploadStub = sinon.stub().returns({
-        file: 'base64-file',
-        is_csv: false
-      });
-
-      fsMock = {
-        readFile: sinon.stub().callsFake((p, cb) => cb(null, mockData)),
-        unlink: sinon.stub().callsFake((p, cb) => cb(null))
-      };
-
-      notifyClientMock = {
-        NotifyClient: class {
-          constructor() {
-            this.prepareUpload = prepareUploadStub;
-            this.sendEmail = sendEmailStub;
-
-            return this;
-          }
-        }
-      };
+      pdfConverterStub.should.have.been.calledOnce;
+      pdfSetStub.should.have.been.calledOnce.calledWithExactly({ template: 'html-data' });
+      pdfSaveStub.should.have.been.calledOnce;
     });
 
-    it('should send the correct details to the email service', async () => {
-      const req = request({ session: { fullName: 'Jane Smith' } });
-      const emailReceiptTemplateId = 'test';
-      const applicantEmail = 'test@example.org';
-      const appName = 'testApp';
+    it('should upload the pdf data to filevault', async () => {
+      await instance.save(req, res, mockLocals);
 
-      const instance = getProxyquiredInstance({
-        fs: fsMock,
-        '../../../lib/utils': notifyClientMock,
-        '../../../config': configMock
+      fileVaultStub.should.have.been.calledOnce;
+      fvSetStub.should.have.been.calledOnce.calledWithExactly({
+        name: 'application_form.pdf',
+        data: 'pdf-data',
+        mimetype: 'application/pdf'
       });
-      const bufferData = Buffer.from(mockData);
+      fvSaveStub.should.have.been.calledOnce;
+    });
 
-      instance.sendReceipt = sinon.stub().resolves();
-      instance.notifyByEmail = sinon.stub().resolves();
+    it('should return the pdf data and file vault url', async () => {
+      const result = await instance.save(req, res, mockLocals);
 
-      await instance.sendCaseworkerEmailWithAttachment(req, bufferData);
+      expect(result).to.eql({ pdfData: 'pdf-data', fvLink: 'fv-url' });
+    });
 
-      const expectedEmailContent = {
-        personalisation: {
-          'form id': {
-            file: 'base64-file',
-            is_csv: false
-          }
-        }
-      };
+    it('should throw an error if there is an issue with uploading the pdf', () => {
+      pdfSaveStub.rejects();
+      return instance.save(req, res, mockLocals)
+        .catch(err => {
+          fvSaveStub.should.not.have.been.called;
+          err.should.be.instanceOf(Error);
+        });
+    });
 
-      prepareUploadStub.withArgs(bufferData).should.be.calledOnce;
-
-      sendEmailStub.should.be.calledOnceWith(configMock.govukNotify.templateForm.apply,
-        configMock.govukNotify.caseworkerEmail,
-        expectedEmailContent);
-
-      instance.sendReceipt.withArgs(req).should.be.calledOnce;
-      instance.notifyByEmail.withArgs(emailReceiptTemplateId, applicantEmail, appName);
+    it('should throw an error if there is an issue with saving to filevault', () => {
+      fvSaveStub.rejects();
+      return instance.save(req, res, mockLocals)
+        .catch(err => {
+          pdfSaveStub.should.have.been.calledOnce;
+          err.should.be.instanceOf(Error);
+        });
     });
   });
 });

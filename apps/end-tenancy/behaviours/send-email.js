@@ -1,8 +1,9 @@
 'use strict';
 
+const _ = require('lodash');
 const config = require('../../../config');
 const utils = require('../../../lib/utils');
-const UploadPDF = require('./upload-pdf');
+const UploadPDF = require('../models/upload-pdf');
 const NotifyClient = utils.NotifyClient;
 
 module.exports = superclass => class extends superclass {
@@ -38,9 +39,10 @@ module.exports = superclass => class extends superclass {
       }
 
       await notifyClient.sendEmail(config.notify.templatePDF, caseworkerEmail, {
-        personalisation: Object.assign({}, {title: title}, {
+        personalisation: {
+          title,
           'form id': fvLink
-        })
+        }
       });
       return req.log('info', 'ukviet.submit_form.create_email_with_file_notify.successful');
     } catch (err) {
@@ -53,8 +55,7 @@ module.exports = superclass => class extends superclass {
   async sendCustomerEmailWithAttachment(req, pdfData) {
     const notifyKey = config.notify.apiKey;
     const applicantEmail = req.sessionModel.get('landlord-email-address')
-      ? req.sessionModel.get('landlord-email-address')
-      : req.sessionModel.get('agent-email-address');
+      || req.sessionModel.get('agent-email-address');
 
     const route = req.sessionModel.get('what');
     const title = `Your ${route} has been sent`;
@@ -63,14 +64,16 @@ module.exports = superclass => class extends superclass {
       const notifyClient = new NotifyClient(notifyKey);
 
       await notifyClient.sendEmail(config.notify.templateCustomer, applicantEmail, {
-        personalisation: Object.assign({}, {title: title}, {
+        personalisation: {
+          title,
           'form id': notifyClient.prepareUpload(pdfData)
-        })
+        }
       });
       req.log('info', 'ukviet.send_customer_email.create_email_notify.successful');
     } catch (err) {
+      const error = _.get(err, 'response.data.errors[0]', err.message || err);
       req.log('error', 'ukviet.send_customer_email.create_email_notify.error', err.message || err);
-      throw err;
+      throw new Error(error);
     }
   }
 };
