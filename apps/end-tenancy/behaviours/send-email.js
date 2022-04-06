@@ -13,7 +13,7 @@ module.exports = superclass => class extends superclass {
 
       const result = await uploadPDF.save(req, res, super.locals(req, res));
 
-      await this.sendCaseworkerEmailWithAttachment(req, result.pdfData, result.fvLink);
+      await this.sendCaseworkerEmailWithAttachment(req, result.fvLink);
       await this.sendCustomerEmailWithAttachment(req, result.pdfData);
 
       req.log('info', 'ukviet.submit_form.successful');
@@ -24,7 +24,7 @@ module.exports = superclass => class extends superclass {
     }
   }
 
-  async sendCaseworkerEmailWithAttachment(req, pdfData, fvLink) {
+  async sendCaseworkerEmailWithAttachment(req, fvLink) {
     const caseworkerEmail = config.notify.caseworkerEmail;
     const notifyKey = config.notify.apiKey;
 
@@ -46,7 +46,7 @@ module.exports = superclass => class extends superclass {
       });
       return req.log('info', 'ukviet.submit_form.create_email_with_file_notify.successful');
     } catch (err) {
-      const error = _.get(err, 'response.data.errors[0]', err.message || err);
+      const error = _.get(err, 'response.data.errors[0]', err.message || err.data || err);
       req.log('error', 'ukviet.submit_form.create_email_with_file_notify.error', error);
       throw new Error(error);
     }
@@ -71,7 +71,7 @@ module.exports = superclass => class extends superclass {
       });
       req.log('info', 'ukviet.send_customer_email.create_email_notify.successful');
     } catch (err) {
-      const error = _.get(err, 'response.data.errors[0]', err.message || err);
+      const error = _.get(err, 'response.data.errors[0]', err.message || err.data || err);
       req.log('error', 'ukviet.send_customer_email.create_email_notify.error', err.message || err);
       throw new Error(error);
     }
