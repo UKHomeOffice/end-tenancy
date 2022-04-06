@@ -5,6 +5,8 @@ const config = require('../../../config');
 
 const domain = config.hosts.acceptanceTests;
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 Given('I start a {string}', async function (route) {
   this.route = route;
   await this.page.goto(`${domain}`);
@@ -84,6 +86,11 @@ Then('I submit the page', async function () {
 
 Then('I confirm the declaration', async function () {
   await this.page.click('#declaration');
+}.bind(World));
+
+Then('I submit the application', async function () {
+  await this.page.click('input[type="submit"]');
+  await sleep(5000);
 }.bind(World));
 
 Then('I click the {string} button', async function (button) {
