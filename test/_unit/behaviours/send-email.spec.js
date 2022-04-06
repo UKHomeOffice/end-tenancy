@@ -20,8 +20,7 @@ describe('Send Email Behaviour', () => {
         apiKey: 'mock-api-key',
         caseworkerEmail: 'mock-case-worker@example.org',
         templateCaseworker: 'template-caseworker',
-        templateCustomer: 'template-customer',
-        templatePDF: 'template-pdf'
+        templateCustomer: 'template-customer'
       }
     };
 
@@ -99,7 +98,7 @@ describe('Send Email Behaviour', () => {
       };
 
       expect(sendEmailStub.firstCall.args).to.eql([
-        configMock.notify.templatePDF,
+        configMock.notify.templateCaseworker,
         configMock.notify.caseworkerEmail,
         expectedCaseworkerEmailContent
       ]);

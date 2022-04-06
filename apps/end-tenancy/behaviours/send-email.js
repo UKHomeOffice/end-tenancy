@@ -38,7 +38,7 @@ module.exports = superclass => class extends superclass {
         req.log('warn', '*** Notify API Key set to USE_MOCK. Ensure disabled in production! ***');
       }
 
-      await notifyClient.sendEmail(config.notify.templatePDF, caseworkerEmail, {
+      await notifyClient.sendEmail(config.notify.templateCaseworker, caseworkerEmail, {
         personalisation: {
           title,
           'form id': fvLink
