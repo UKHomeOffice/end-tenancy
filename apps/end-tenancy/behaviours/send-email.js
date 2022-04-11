@@ -5,9 +5,15 @@ const config = require('../../../config');
 const utils = require('../../../lib/utils');
 const UploadPDF = require('../models/upload-pdf');
 const NotifyClient = utils.NotifyClient;
+const notifyKey = config.notify.apiKey;
 
 module.exports = superclass => class extends superclass {
   async successHandler(req, res, next) {
+    if (notifyKey === 'USE_MOCK') {
+      req.log('warn', '*** Notify API Key set to USE_MOCK. Ensure disabled in production! ***');
+      return super.successHandler(req, res, next);
+    }
+
     try {
       const uploadPDF = new UploadPDF({ sortSections: true });
 
@@ -26,17 +32,11 @@ module.exports = superclass => class extends superclass {
 
   async sendCaseworkerEmailWithAttachment(req, fvLink) {
     const caseworkerEmail = config.notify.caseworkerEmail;
-    const notifyKey = config.notify.apiKey;
-
     const route = req.sessionModel.get('what');
     const title = `A ${route} has been sent`;
 
     try {
       const notifyClient = new NotifyClient(notifyKey);
-
-      if (notifyKey === 'USE_MOCK') {
-        req.log('warn', '*** Notify API Key set to USE_MOCK. Ensure disabled in production! ***');
-      }
 
       await notifyClient.sendEmail(config.notify.templateCaseworker, caseworkerEmail, {
         personalisation: {
@@ -53,7 +53,6 @@ module.exports = superclass => class extends superclass {
   }
 
   async sendCustomerEmailWithAttachment(req, pdfData) {
-    const notifyKey = config.notify.apiKey;
     const applicantEmail = req.sessionModel.get('landlord-email-address')
       || req.sessionModel.get('agent-email-address');
 
