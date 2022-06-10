@@ -27,6 +27,7 @@ You'll then need to set an environment variable for the end-tenancy app
 
 [Install Docker Compose](https://docs.docker.com/compose/install/)
 
+
 Run the services locally with Docker Compose
 ```bash
 $ docker-compose up
