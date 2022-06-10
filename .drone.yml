@@ -240,7 +240,7 @@ steps:
   commands:
     - bin/deploy.sh $${UAT_ENV}
   when:
-    branch: main
+    branch: master
     event: pull_request
 #
 # # TEST Deploy to Master STG environment
@@ -255,7 +255,7 @@ steps:
 #   commands:
 #     - bin/deploy.sh $${STG_ENV}
 #   when:
-#     branch: main
+#     branch: master
 #     event: pull_request
 
   # Deploy to Master UAT environment
