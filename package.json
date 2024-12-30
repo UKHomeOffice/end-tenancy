@@ -10,7 +10,7 @@
     "url": "https://github.com/UKHomeOffice/end-tenancy"
   },
   "engines": {
-    "node": ">=18.12.1 <21.0.0"
+    "node": ">=18.12.1 <22.12.0"
   },
   "license": "./LICENSE",
   "readme": "./README.md",
