@@ -4,7 +4,7 @@ A# End Tenancy
 
 This project is built with [HOF-Bootstrap](https://github.com/UKHomeOffice/hof-bootstrap) and uses [Docker](https://www.docker.com/).
 
-## Getting started
+### Getting started
 
 Get the project from Github.
 ```bash
