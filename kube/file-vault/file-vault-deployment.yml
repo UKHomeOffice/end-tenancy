@@ -179,7 +179,7 @@ spec:
             {{ end }}
             - name: PROXY_UPSTREAM_URL
               value: "http://127.0.0.1:3000"
-          command:
+          args:
             # URls that you wish to protect.
             - --resources=uri=/*
             - --enable-default-deny=false
