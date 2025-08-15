@@ -130,6 +130,14 @@ spec:
                   name: s3-bucket
                   key: bucket_name
                   {{ end }}
+            - name: AWS_EXPIRY_TIME
+              value: "120" # 2 minutes in seconds
+            - name: RETURN_ORIGINAL_SIGNED_URL
+              value: "no"
+            - name: ALLOW_GENERATE_LINK_ROUTE
+              value: "yes"
+            - name: DEBUG
+              value: "*"
           securityContext:
             runAsNonRoot: true
 
@@ -189,27 +197,44 @@ spec:
             runAsNonRoot: true
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /certs
+              name: certs
+            - mountPath: /etc/ssl/certs
+              name: bundle
+              readOnly: true
 
         - name: nginx-proxy
           # nginx-proxy-govuk:v4
           image: quay.io/ukhomeofficedigital/nginx-proxy-govuk@sha256:4470064d0b1d20ae08c5fd85551576cb687f342a22d6cb456fda9b2c4ce8c8df
           resources:
             limits:
-              cpu: 250m
-              memory: 256Mi
+              memory: 1024Mi
+              cpu: 200m
             requests:
-              cpu: 10m
-              memory: 10Mi
+              memory: 512Mi
           env:
 {{ file .FILEVAULT_NGINX_SETTINGS | indent 12 }}
           ports:
             - containerPort: 10080
             - containerPort: 10443
-          volumeMounts:
-            - mountPath: /public
-              name: public
           securityContext:
             runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /certs
+              name: certs
+              readOnly: true
+            - name: bundle
+              mountPath: /etc/ssl/certs
+              readOnly: true
       volumes:
-        - name: public
-          emptyDir: {}
+        - name: certs
+          secret:
+            {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
+            secretName: branch-tls-external
+            {{ else }}
+            secretName: file-vault-cert
+            {{ end }}
+        - name: bundle
+          configMap:
+            name: bundle
