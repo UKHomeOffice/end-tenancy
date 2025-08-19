@@ -130,14 +130,6 @@ spec:
                   name: s3-bucket
                   key: bucket_name
                   {{ end }}
-            - name: AWS_EXPIRY_TIME
-              value: "120" # 2 minutes in seconds
-            - name: RETURN_ORIGINAL_SIGNED_URL
-              value: "no"
-            - name: ALLOW_GENERATE_LINK_ROUTE
-              value: "yes"
-            - name: DEBUG
-              value: "*"
           securityContext:
             runAsNonRoot: true
 
@@ -191,18 +183,9 @@ spec:
           {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
             - --verbose=true
           {{ end }}
-          ports:
-            - containerPort: 3001
           securityContext:
             runAsNonRoot: true
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-            - mountPath: /certs
-              name: certs
-            - mountPath: /etc/ssl/certs
-              name: bundle
-              readOnly: true
+
 
         - name: nginx-proxy
           # nginx-proxy-govuk:v4
