@@ -201,23 +201,11 @@ spec:
           ports:
             - containerPort: 10080
             - containerPort: 10443
+          volumeMounts:
+            - mountPath: /public
+              name: public
           securityContext:
             runAsNonRoot: true
-          volumeMounts:
-            - mountPath: /certs
-              name: certs
-              readOnly: true
-            - name: bundle
-              mountPath: /etc/ssl/certs
-              readOnly: true
       volumes:
-        - name: certs
-          secret:
-            {{ if eq .KUBE_NAMESPACE .BRANCH_ENV }}
-            secretName: branch-tls-external
-            {{ else }}
-            secretName: file-vault-cert
-            {{ end }}
-        - name: bundle
-          configMap:
-            name: bundle
+        - name: public
+          emptyDir: {}
