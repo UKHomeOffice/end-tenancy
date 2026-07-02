@@ -31,7 +31,7 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
-    "hof": "~22.10.4",
+    "hof": "24.4.0-proto-fix-beta",
     "hogan.js": "^3.0.2",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
