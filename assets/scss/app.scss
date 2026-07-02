@@ -3,6 +3,7 @@ $path: "../img/";
 @import "hof/frontend/themes/gov-uk/styles/govuk";
 
 @import "./icons.scss";
+@import "./autocomplete.scss";
 
 .phase-banner {
   @include phase-banner(beta);
