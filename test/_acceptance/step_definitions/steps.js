@@ -9,6 +9,28 @@ const domain = config.hosts.acceptanceTests;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+const fillAutocompleteOrInput = async (page, field, value) => {
+  const autocompleteInput = page.locator(`input#${field}:visible`).first();
+
+  if (await autocompleteInput.count()) {
+    await autocompleteInput.fill(value);
+    // Commit an option for accessible-autocomplete widgets.
+    await autocompleteInput.press('ArrowDown');
+    await autocompleteInput.press('Enter');
+    await autocompleteInput.press('Tab');
+    return;
+  }
+
+  const select = page.locator(`select#${field}`).first();
+
+  if (await select.count()) {
+    await select.selectOption({ label: value });
+    return;
+  }
+
+  throw new Error(`Unable to find autocomplete/input field "${field}"`);
+};
+
 Given('I start a {string}', async function (route) {
   this.route = route;
   await this.page.goto(`${domain}`);
@@ -17,7 +39,22 @@ Given('I start a {string}', async function (route) {
 }.bind(World));
 
 Then('I fill {string} with {string}', async function (field, value) {
-  await this.page.fill(`#${field}`, value);
+  const namedInput = this.page.locator(`input[name="${field}"]`).first();
+
+  if (await namedInput.count()) {
+    await namedInput.fill(value);
+    return;
+  }
+
+  const autocompleteInput = this.page.locator(`input#${field}`).first();
+
+  if (await autocompleteInput.count()) {
+    await autocompleteInput.fill(value);
+    await autocompleteInput.press('Tab');
+    return;
+  }
+
+  throw new Error(`Unable to find an input for field "${field}"`);
 }.bind(World));
 
 Then('I fill the address fields with correct information', async function () {
@@ -56,7 +93,7 @@ Then('I add a tenant with full information', async function () {
   await this.page.fill('#date-of-birth-month', '1');
   await this.page.fill('#date-of-birth-year', '1990');
   await this.page.click('#tenant-details-nationality');
-  await this.page.fill('#nationality', 'United Kingdom');
+  await fillAutocompleteOrInput(this.page, 'nationality', 'United Kingdom');
   await this.page.click('#tenant-details-reference-number');
   await this.page.fill('#reference-number', 'A12345');
   await this.page.click('input[type="submit"]');

@@ -3,6 +3,7 @@ $path: "../img/";
 @import "hof/frontend/themes/gov-uk/styles/govuk";
 
 @import "./icons.scss";
+@import "./autocomplete.scss";
 
 .phase-banner {
   @include phase-banner(beta);
@@ -95,35 +96,10 @@ input[type='checkbox'] ~ span.visuallyhidden {
   display: none !important;
 }
 
-//autocomplete styling
-.tt-menu {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  width: 65%;
-}
-
 .loop-summary-table {
   td.numeric {
     padding-right: 0;
   }
-}
-
-.tt-suggestion {
-  padding: 0.5em;
-
-  &:hover,
-  &.tt-cursor {
-    color: #fff;
-    background-color: #0097cf;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.twitter-typeahead {
-  width: 100%;
 }
 
 .table-details {
@@ -173,7 +149,6 @@ input[type='checkbox'] ~ span.visuallyhidden {
 }
 
 ul {
-  @extend .text;
   @extend .list;
   @extend .list-bullet;
 }
