@@ -102,20 +102,6 @@ input[type='checkbox'] ~ span.visuallyhidden {
   }
 }
 
-.tt-suggestion {
-  padding: 0.5em;
-
-  &:hover,
-  &.tt-cursor {
-    color: #fff;
-    background-color: #0097cf;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
 .table-details {
   width: 100%;
   margin-bottom: 3em;

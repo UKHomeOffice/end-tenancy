@@ -1,11 +1,10 @@
-FROM quay.io/ukhomeofficedigital/hof-nodejs:20.20.2-alpine3.23@sha256:bcd17b68a0f1910f1670b07f6a47d1e2c28291bafc219807c494dc62b57ea25e
+FROM node:24.16.0-alpine3.23@sha256:9a2c6269f83d74af45665c0b738b78c7b5f07bf2374c72a4c540065a975b9693
 
 USER root
 
-# Switch to UK Alpine mirrors, update package index and upgrade all installed packages
-RUN echo "http://uk.alpinelinux.org/alpine/v3.23/main" > /etc/apk/repositories ; \
-    echo "http://uk.alpinelinux.org/alpine/v3.23/community" >> /etc/apk/repositories ; \
-    apk update && apk upgrade --no-cache
+# Update Alpine packages with latest security and bug fixes
+RUN apk update && \
+    apk upgrade --no-cache
     
 # Setup nodejs group & nodejs user
 RUN addgroup --system nodejs --gid 998 && \
