@@ -96,13 +96,6 @@ input[type='checkbox'] ~ span.visuallyhidden {
   display: none !important;
 }
 
-//autocomplete styling
-.tt-menu {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  width: 65%;
-}
-
 .loop-summary-table {
   td.numeric {
     padding-right: 0;
@@ -121,10 +114,6 @@ input[type='checkbox'] ~ span.visuallyhidden {
   &:hover {
     cursor: pointer;
   }
-}
-
-.twitter-typeahead {
-  width: 100%;
 }
 
 .table-details {
@@ -174,7 +163,6 @@ input[type='checkbox'] ~ span.visuallyhidden {
 }
 
 ul {
-  @extend .text;
   @extend .list;
   @extend .list-bullet;
 }
