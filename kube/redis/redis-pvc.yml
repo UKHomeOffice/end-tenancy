@@ -16,4 +16,3 @@ spec:
   {{ if ne .REDIS_PERSISTENCE_STORAGE_CLASS "" }}
   storageClassName: {{ .REDIS_PERSISTENCE_STORAGE_CLASS }}
   {{ end }}
-  {{ end }}
