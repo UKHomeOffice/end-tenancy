@@ -24,16 +24,14 @@ module.exports = class UploadModel extends Model {
       reqConf.headers = {
         ...formData.getHeaders()
       };
-      logger.log('info', 'SAVE PDF DATA', reqConf);
       const response = await this.request(reqConf);
-      logger.log('info', 'RESPONSE FROM FILE VAULT SAVE', response);
-
       await this.set({ url: response.url });
+      logger.log('info', 'Successfully saved data');
       await this.unset('data');
 
       return response;
     } catch (err) {
-      logger.error('Error in save method ', err);
+      logger.error(`Error uploading file: ${err.message}`);
       throw err;
     }
   }
@@ -58,12 +56,16 @@ module.exports = class UploadModel extends Model {
         },
         method: 'POST'
       };
-      logger.log('info', 'REQUEST DATA', tokenReq);
       const response = await this._request(tokenReq);
-      logger.log('info', 'RESPONSE FROM FILE VAULT', response);
+      if (!response.data || !response.data.access_token) {
+        const errorMsg = 'No access token in response';
+        logger.error(errorMsg);
+        throw new Error(errorMsg);
+      }
+      logger.log('info', 'Successfully retrieved access token');
       return { bearer: response.data.access_token };
     } catch (err) {
-      logger.error(`Error in auth method: ${err.response?.data?.error} - ${err.response?.data?.error_description}`);
+      logger.error(`Error in auth method: ${err.response?.data?.error || err.message}`);
       throw err;
     }
   }

@@ -25,7 +25,7 @@ module.exports = superclass => class extends superclass {
       req.log('info', 'ukviet.submit_form.successful');
       return super.successHandler(req, res, next);
     } catch (err) {
-      req.log('error', 'ukviet.submit_form.error', err.message || err);
+      req.log('error', 'ukviet.submit_form.error', err.message);
       return next(err);
     }
   }
@@ -46,7 +46,7 @@ module.exports = superclass => class extends superclass {
       });
       return req.log('info', 'ukviet.submit_form.create_email_with_file_notify.successful');
     } catch (err) {
-      const error = _.get(err, 'response.data.errors[0]', err.message || err.data || err);
+      const error = _.get(err, 'response.data.errors[0].message', err.message || 'Failed to send caseworker email');
       req.log('error', 'ukviet.submit_form.create_email_with_file_notify.error', error);
       throw new Error(error);
     }
@@ -70,8 +70,8 @@ module.exports = superclass => class extends superclass {
       });
       req.log('info', 'ukviet.send_customer_email.create_email_notify.successful');
     } catch (err) {
-      const error = _.get(err, 'response.data.errors[0]', err.message || err.data || err);
-      req.log('error', 'ukviet.send_customer_email.create_email_notify.error', err.message || err);
+      const error = _.get(err, 'response.data.errors[0].message', err.message || 'Failed to send customer email');
+      req.log('error', 'ukviet.send_customer_email.create_email_notify.error', error);
       throw new Error(error);
     }
   }
