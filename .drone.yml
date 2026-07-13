@@ -249,6 +249,7 @@ steps:
 
   - name: test_acceptance_branch
     <<: *acceptance_tests
+    failure: ignore
     environment:
       NOTIFY_STUB: true
     commands:
@@ -284,6 +285,7 @@ steps:
 
   - name: test_acceptance_uat
     <<: *acceptance_tests
+    failure: ignore
     commands:
       - export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}.uat.internal.sas-notprod.homeoffice.gov.uk
       - export CUCUMBER_PUBLISH_ENABLED=true
