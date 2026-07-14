@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 import dotenv from 'dotenv';
 
@@ -36,14 +36,13 @@ export default defineConfig({
     projects: [
         {
             name: 'chromium',
-            // use: { ...devices['Desktop Chrome'],
             use: {
                 browserName: 'chromium',
                 launchOptions: {
                     args: ['--start-maximized'],
                 },
-                video: 'on', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
-                screenshot: 'on',
+                video: 'retain-on-failure', //Options => 'on', 'off', 'retain-on-failure' or 'on-first-retry'
+                screenshot: 'only-on-failure', 
             },
         },
     ],
