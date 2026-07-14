@@ -37,7 +37,7 @@ export class ukvietCheckYourAnswersPage extends basePage {
   }
 
   async answerChangeTenancyStartDate(): Promise<void> {
-    await this.page.locator('a#tenancy-start-change-').click();
+    await this.page.locator('a#tenancy-start-change').click();
   }
 
   async getUpdatedTenancyStartDate(): Promise<string> {
