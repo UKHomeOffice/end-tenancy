@@ -5,3 +5,7 @@ apps/**/acceptance/**/*.js
 LICENSE
 README.md
 CONTRIBUTING.md
+e2e-tests
+playwright-report
+test-results
+bin

@@ -32,3 +32,6 @@ playwright-report/
 /playwright/.auth/
 *.webm
 .features-gen/
+.features-gen
+playwright-report
+test-results
