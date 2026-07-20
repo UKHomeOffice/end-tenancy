@@ -64,17 +64,8 @@ Feature: UKVIET - UkVI Ending of Tenancy
     Then I check my answers for Ukviet - "<Description>"
     And I am able to submit the Ukviet questionnaire
     And I am able to navigate back to home page
-    @journey-request
     Examples:
       | Scenario ID | Description                                                              |
       | 1           | Request a notice - Multiple tenants - Landlord                           |
-
-    @journey-check
-    Examples:
-      | Scenario ID | Description                                                              |
       | 5           | Disqualified person left property - Multiple tenants - Checking Landlord |
-
-    @journey-report
-    Examples:
-      | Scenario ID | Description                                                              |
       | 9           | Report disqualified person left property  - Multiple tenants - Agent     |
