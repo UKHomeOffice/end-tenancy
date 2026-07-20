@@ -17,6 +17,8 @@ export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
 
 REDIS_PERSISTENCE_ENABLED=$(echo "$REDIS_PERSISTENCE_ENABLED" | tr '[:upper:]' '[:lower:]')
 
+redis_runtime_files='kube/redis/redis-service.yml -f kube/redis/redis-network-policy.yml -f kube/redis/redis-deployment.yml'
+
 deploy_redis() {
   if [[ "$REDIS_PERSISTENCE_ENABLED" == 'true' ]] && [[ -z "$REDIS_PERSISTENCE_EXISTING_CLAIM" ]]; then
     $kd -f kube/redis/redis-pvc.yml
@@ -62,10 +64,12 @@ REDIS_PERSISTENCE_ENABLED=$(echo "$REDIS_PERSISTENCE_ENABLED" | tr '[:upper:]' '
 
 if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
   $kd -f kube/configmaps -f kube/certs
-  $kd -f kube/html-pdf -f kube/file-vault -f kube/app
+  $kd -f kube/html-pdf -f kube/file-vault 
+  $kd -f $redis_runtime_files -f kube/app
 elif [[ ${KUBE_NAMESPACE} == ${UAT_ENV} ]]; then
-  $kd -f kube/configmaps/configmap.yml  -f kube/app
+  $kd -f kube/configmaps/configmap.yml
   $kd -f kube/html-pdf -f kube/file-vault
+  $kd -f $redis_runtime_files -f kube/app
 elif [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml  -f kube/app/service.yml
   $kd -f kube/app/ingress-internal.yml -f kube/app/networkpolicy-internal.yml
