@@ -7,32 +7,36 @@ export CONFIGMAP_VALUES=$HOF_CONFIG/configmap-values.yaml
 export NGINX_SETTINGS=$HOF_CONFIG/nginx-settings.yaml
 export FILEVAULT_NGINX_SETTINGS=$HOF_CONFIG/filevault-nginx-settings.yaml
 export FILEVAULT_INGRESS_EXTERNAL_ANNOTATIONS=$HOF_CONFIG/filevault-ingress-external-annotations.yaml
-
-kd='kd --insecure-skip-tls-verify --timeout 10m --check-interval 10s'
-
 export REDIS_PERSISTENCE_ENABLED=${REDIS_PERSISTENCE_ENABLED:-false}
 export REDIS_PERSISTENCE_ACCESS_MODES=${REDIS_PERSISTENCE_ACCESS_MODES:-ReadWriteOnce}
 export REDIS_PERSISTENCE_STORAGE_CLASS=${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted}
 export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
 
-REDIS_PERSISTENCE_ENABLED=$(echo "$REDIS_PERSISTENCE_ENABLED" | tr '[:upper:]' '[:lower:]')
-
+kd='kd --insecure-skip-tls-verify --timeout 10m --check-interval 10s'
+redis_storage_files='kube/redis/redis-persistent-volume-claim.yml'
 redis_runtime_files='kube/redis/redis-service.yml -f kube/redis/redis-network-policy.yml -f kube/redis/redis-deployment.yml'
 
-deploy_redis() {
-  if [[ "$REDIS_PERSISTENCE_ENABLED" == 'true' ]] && [[ -z "$REDIS_PERSISTENCE_EXISTING_CLAIM" ]]; then
-    $kd -f kube/redis/redis-pvc.yml
+recreate_redis_pvc_if_image_changed() {
+  if [[ ${REDIS_PERSISTENCE_ENABLED} != true ]]; then
+    return
   fi
 
-  $kd -f kube/redis/redis-service.yml -f kube/redis/redis-network-policy.yml -f kube/redis/redis-deployment.yml
-}
-
-delete_redis() {
-  if [[ "$REDIS_PERSISTENCE_ENABLED" == 'true' ]] && [[ -z "$REDIS_PERSISTENCE_EXISTING_CLAIM" ]]; then
-    $kd --delete -f kube/redis/redis-pvc.yml
+  if [[ -n "${REDIS_PERSISTENCE_EXISTING_CLAIM}" ]]; then
+    return
   fi
 
-  $kd --delete -f kube/redis/redis-deployment.yml -f kube/redis/redis-service.yml -f kube/redis/redis-network-policy.yml
+  current_redis_image=$($kubectl get deployment redis -o jsonpath='{.spec.template.spec.containers[?(@.name=="redis")].image}' 2>/dev/null || true)
+  desired_redis_image=$(grep -m1 '^[[:space:]]*image:' kube/redis/redis-deployment.yml | awk '{print $2}')
+
+  if [[ -n "${current_redis_image}" && -n "${desired_redis_image}" && "${current_redis_image}" != "${desired_redis_image}" ]]; then
+    echo "Redis image changed (${current_redis_image} -> ${desired_redis_image}), recycling redis deployment while preserving PVC"
+
+    $kubectl delete deployment redis --ignore-not-found=true
+
+    while $kubectl get pods -l app=redis --no-headers 2>/dev/null | grep -q .; do
+      sleep 2
+    done
+  fi
 }
 
 if [[ $1 == 'tear_down' ]]; then
@@ -50,12 +54,12 @@ fi
 export KUBE_NAMESPACE=$1
 export DRONE_SOURCE_BRANCH=$(echo $DRONE_SOURCE_BRANCH | tr '[:upper:]' '[:lower:]' | tr '/' '-')
 
-if [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
-  export REDIS_PERSISTENCE_ENABLED=true
-  export REDIS_PERSISTENCE_SIZE=10Gi
-elif [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
+if [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
   export REDIS_PERSISTENCE_ENABLED=true
   export REDIS_PERSISTENCE_SIZE=1Gi
+elif [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
+  export REDIS_PERSISTENCE_ENABLED=true
+  export REDIS_PERSISTENCE_SIZE=5Gi
 else
   export REDIS_PERSISTENCE_ENABLED=false
 fi
