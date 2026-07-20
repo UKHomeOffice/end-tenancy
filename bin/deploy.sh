@@ -12,32 +12,11 @@ export REDIS_PERSISTENCE_ACCESS_MODES=${REDIS_PERSISTENCE_ACCESS_MODES:-ReadWrit
 export REDIS_PERSISTENCE_STORAGE_CLASS=${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted}
 export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
 
-kd='kd --insecure-skip-tls-verify --timeout 10m --check-interval 10s'
-redis_storage_files='kube/redis/redis-persistent-volume-claim.yml'
+redis_storage_files='kube/redis/redis-persistent-volume.yml'
 redis_runtime_files='kube/redis/redis-service.yml -f kube/redis/redis-network-policy.yml -f kube/redis/redis-deployment.yml'
 
-recreate_redis_pvc_if_image_changed() {
-  if [[ ${REDIS_PERSISTENCE_ENABLED} != true ]]; then
-    return
-  fi
+kd='kd --insecure-skip-tls-verify --timeout 10m --check-interval 10s'
 
-  if [[ -n "${REDIS_PERSISTENCE_EXISTING_CLAIM}" ]]; then
-    return
-  fi
-
-  current_redis_image=$($kubectl get deployment redis -o jsonpath='{.spec.template.spec.containers[?(@.name=="redis")].image}' 2>/dev/null || true)
-  desired_redis_image=$(grep -m1 '^[[:space:]]*image:' kube/redis/redis-deployment.yml | awk '{print $2}')
-
-  if [[ -n "${current_redis_image}" && -n "${desired_redis_image}" && "${current_redis_image}" != "${desired_redis_image}" ]]; then
-    echo "Redis image changed (${current_redis_image} -> ${desired_redis_image}), recycling redis deployment while preserving PVC"
-
-    $kubectl delete deployment redis --ignore-not-found=true
-
-    while $kubectl get pods -l app=redis --no-headers 2>/dev/null | grep -q .; do
-      sleep 2
-    done
-  fi
-}
 
 if [[ $1 == 'tear_down' ]]; then
   export KUBE_NAMESPACE=$BRANCH_ENV
@@ -51,20 +30,29 @@ if [[ $1 == 'tear_down' ]]; then
   exit 0
 fi
 
+
 export KUBE_NAMESPACE=$1
 export DRONE_SOURCE_BRANCH=$(echo $DRONE_SOURCE_BRANCH | tr '[:upper:]' '[:lower:]' | tr '/' '-')
 
-if [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
-  export REDIS_PERSISTENCE_ENABLED=true
-  export REDIS_PERSISTENCE_SIZE=1Gi
-elif [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
-  export REDIS_PERSISTENCE_ENABLED=true
-  export REDIS_PERSISTENCE_SIZE=5Gi
+if [[ ${KUBE_NAMESPACE} == ${STG_ENV} || ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
+  export REDIS_PERSISTENCE_ENABLED=${REDIS_PERSISTENCE_ENABLED:-true}
 else
   export REDIS_PERSISTENCE_ENABLED=false
 fi
+export REDIS_PERSISTENCE_ACCESS_MODES=${REDIS_PERSISTENCE_ACCESS_MODES:-ReadWriteOnce}
+export REDIS_PERSISTENCE_STORAGE_CLASS=${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted-eu-west-2b}
+export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
+export REDIS_PERSISTENCE_ANNOTATIONS_FILE=${REDIS_PERSISTENCE_ANNOTATIONS_FILE:-}
 
-REDIS_PERSISTENCE_ENABLED=$(echo "$REDIS_PERSISTENCE_ENABLED" | tr '[:upper:]' '[:lower:]')
+if [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
+  export REDIS_PERSISTENCE_SIZE=5Gi
+else
+  export REDIS_PERSISTENCE_SIZE=1Gi
+fi
+
+if [[ (${KUBE_NAMESPACE} == ${STG_ENV} || ${KUBE_NAMESPACE} == ${PROD_ENV}) && ${REDIS_PERSISTENCE_ENABLED} == "true" && -z "${REDIS_PERSISTENCE_EXISTING_CLAIM}" ]]; then
+  $kd -f $redis_storage_files
+fi
 
 if [[ ${KUBE_NAMESPACE} == ${BRANCH_ENV} ]]; then
   $kd -f kube/configmaps -f kube/certs
@@ -77,13 +65,13 @@ elif [[ ${KUBE_NAMESPACE} == ${UAT_ENV} ]]; then
 elif [[ ${KUBE_NAMESPACE} == ${STG_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml  -f kube/app/service.yml
   $kd -f kube/app/ingress-internal.yml -f kube/app/networkpolicy-internal.yml
-  deploy_redis
-  $kd -f kube/html-pdf -f kube/file-vault -f kube/app/deployment.yml
+  $kd -f kube/html-pdf -f kube/file-vault 
+  $kd -f $redis_runtime_files -f kube/app/deployment.yml
 elif [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
   $kd -f kube/configmaps/configmap.yml  -f kube/app/service.yml
   $kd -f kube/app/ingress-external.yml -f kube/app/networkpolicy-external.yml
-  deploy_redis
-  $kd -f kube/html-pdf -f kube/file-vault -f kube/app/deployment.yml
+  $kd -f kube/html-pdf -f kube/file-vault 
+  $kd -f $redis_runtime_files -f kube/app/deployment.yml
 fi
 
 sleep $READY_FOR_TEST_DELAY
