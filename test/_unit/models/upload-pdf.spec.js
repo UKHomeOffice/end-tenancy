@@ -1,13 +1,15 @@
-
 describe('Upload PDF Behaviour', () => {
   const mockData = '<html></html>';
 
   const getProxyquiredInstance = (overrides, behaviourConfig) => {
-    overrides['../../end-tenancy/translations/src/en/pages.json'] =
-      overrides['../../end-tenancy/translations/src/en/pages.json'] ||
-      { confirm: { sections: { pdf: {}}}, '@noCallThru': true };
+    overrides['../../end-tenancy/translations/src/en/pages.json'] = overrides[
+      '../../end-tenancy/translations/src/en/pages.json'
+    ] || { confirm: { sections: { pdf: {} } }, '@noCallThru': true };
 
-    const Behaviour = proxyquire('../apps/end-tenancy/models/upload-pdf', overrides);
+    const Behaviour = proxyquire(
+      '../apps/end-tenancy/models/upload-pdf',
+      overrides
+    );
 
     const defaults = {
       sessionModelNameKey: 'fullName',
@@ -84,8 +86,9 @@ describe('Upload PDF Behaviour', () => {
     what: 'request',
     intro: null,
     nextPage: '/complete',
-    feedbackUrl: '/feedback?f_t=eyJiYXNlVXJsIjoiL2FwcGx5IiwicGF0aCI6Ii9jb25maXJtIiwidXJsIjoiL2FwcGx5L2N' +
-      'vbmZpcm0ifQ%3D%3D',
+    feedbackUrl:
+        '/feedback?f_t=eyJiYXNlVXJsIjoiL2FwcGx5IiwicGF0aCI6Ii9jb25maXJtIiwidXJsIjoiL2FwcGx5L2N' +
+        'vbmZpcm0ifQ%3D%3D',
     rows: inputRows
   };
 
@@ -113,7 +116,8 @@ describe('Upload PDF Behaviour', () => {
     });
 
     afterEach(() => {
-      orderedSections.confirm.sections['tenants-left'].header = 'Notice requested for';
+      orderedSections.confirm.sections['tenants-left'].header =
+          'Notice requested for';
       mockLocals.rows = inputRows;
       sinon.restore();
     });
@@ -124,8 +128,7 @@ describe('Upload PDF Behaviour', () => {
       const res = response({});
       res.render = sinon.stub().callsFake((template, values, cb) => {
         cb(null, {});
-      }
-      );
+      });
 
       const instance = getProxyquiredInstance({
         fs: fsMock,
@@ -143,9 +146,9 @@ describe('Upload PDF Behaviour', () => {
       actualLocals.title.should.eql('Report Application');
     });
 
-
     it('should send the correct locals and ordered rows to renderHTML for check applications', async () => {
-      orderedSections.confirm.sections['tenants-left'].header = 'Tenants you are checking';
+      orderedSections.confirm.sections['tenants-left'].header =
+          'Tenants you are checking';
 
       const expectedRowsCheck = [
         {
@@ -153,14 +156,24 @@ describe('Upload PDF Behaviour', () => {
         },
         {
           section: 'Tenants you are checking',
-          fields: [{ label: 'Check if a person living in your property is still disqualified from renting'}]
+          fields: [
+            {
+              label:
+                  'Check if a person living in your property is still disqualified from renting'
+            }
+          ]
         }
       ];
 
       const inputRowsCheck = [
         {
           section: 'Tenants you are checking',
-          fields: [{ label: 'Check if a person living in your property is still disqualified from renting' }]
+          fields: [
+            {
+              label:
+                  'Check if a person living in your property is still disqualified from renting'
+            }
+          ]
         },
         {
           section: 'Key details'
@@ -193,7 +206,8 @@ describe('Upload PDF Behaviour', () => {
     });
 
     it('should send the correct locals and ordered rows to renderHTML for report applications', async () => {
-      orderedSections.confirm.sections['tenants-left'].header = 'Tenants who have left';
+      orderedSections.confirm.sections['tenants-left'].header =
+          'Tenants who have left';
 
       const expectedRowsReport = [
         {
@@ -201,14 +215,22 @@ describe('Upload PDF Behaviour', () => {
         },
         {
           section: 'Tenants who have left',
-          fields: [{ label: 'Report that a disqualified person has left your property' }]
+          fields: [
+            {
+              label: 'Report that a disqualified person has left your property'
+            }
+          ]
         }
       ];
 
       const inputRowsReport = [
         {
           section: 'Tenants who have left',
-          fields: [{ label: 'Report that a disqualified person has left your property' }]
+          fields: [
+            {
+              label: 'Report that a disqualified person has left your property'
+            }
+          ]
         },
         {
           section: 'Key details'
@@ -313,7 +335,7 @@ describe('Upload PDF Behaviour', () => {
     });
 
     it('should call sortSections when sortSections is true ', async () => {
-      const req = request({ form: { options: {} }, session: {}});
+      const req = request({ form: { options: {} }, session: {} });
 
       const res = response({});
 
@@ -321,7 +343,8 @@ describe('Upload PDF Behaviour', () => {
         cb(null, {});
       });
 
-      const instance = getProxyquiredInstance({ fs: fsMock,
+      const instance = getProxyquiredInstance({
+        fs: fsMock,
         '../../end-tenancy/translations/src/en/pages.json': orderedSections
       });
       instance.sortSections = sinon.stub().callsFake((...args) => args);
@@ -340,9 +363,13 @@ describe('Upload PDF Behaviour', () => {
         cb(null, {});
       });
 
-      const instance = getProxyquiredInstance({ fs: fsMock,
-        '../../end-tenancy/translations/src/en/pages.json': orderedSections
-      }, {sortSections: false});
+      const instance = getProxyquiredInstance(
+        {
+          fs: fsMock,
+          '../../end-tenancy/translations/src/en/pages.json': orderedSections
+        },
+        { sortSections: false }
+      );
 
       instance.sortSections = sinon.stub().callsFake((...args) => args);
 
@@ -352,7 +379,7 @@ describe('Upload PDF Behaviour', () => {
     });
 
     it('should reject on render error', async () => {
-      const req = request({ form: { options: {} }, session: {pdfHeaders}});
+      const req = request({ form: { options: {} }, session: { pdfHeaders } });
       const res = response({});
       res.render = sinon.stub().callsFake((template, values, cb) => {
         cb(Error('Error'), null);
@@ -382,6 +409,7 @@ describe('Upload PDF Behaviour', () => {
         readFile: sinon.stub().callsFake((p, cb) => cb(null, mockData))
       };
       req = request();
+      req.log = sinon.stub();
       res = response();
       res.render = sinon.stub().callsFake((template, values, cb) => {
         cb(null, 'html-data');
@@ -391,8 +419,12 @@ describe('Upload PDF Behaviour', () => {
       fvSetStub = sinon.stub();
       fvSaveStub = sinon.stub().resolves({ url: 'fv-url' });
 
-      pdfConverterStub = sinon.stub().returns({ set: pdfSetStub, save: pdfSaveStub });
-      fileVaultStub = sinon.stub().returns({ set: fvSetStub, save: fvSaveStub });
+      pdfConverterStub = sinon
+        .stub()
+        .returns({ set: pdfSetStub, save: pdfSaveStub });
+      fileVaultStub = sinon
+        .stub()
+        .returns({ set: fvSetStub, save: fvSaveStub });
 
       instance = getProxyquiredInstance({
         hof: { apis: { pdfConverter: pdfConverterStub } },
@@ -412,7 +444,9 @@ describe('Upload PDF Behaviour', () => {
       await instance.save(req, res, mockLocals);
 
       pdfConverterStub.should.have.been.calledOnce;
-      pdfSetStub.should.have.been.calledOnce.calledWithExactly({ template: 'html-data' });
+      pdfSetStub.should.have.been.calledOnce.calledWithExactly({
+        template: 'html-data'
+      });
       pdfSaveStub.should.have.been.calledOnce;
     });
 
@@ -435,21 +469,41 @@ describe('Upload PDF Behaviour', () => {
     });
 
     it('should throw an error if there is an issue with uploading the pdf', () => {
-      pdfSaveStub.rejects();
-      return instance.save(req, res, mockLocals)
-        .catch(err => {
-          fvSaveStub.should.not.have.been.called;
-          err.should.be.instanceOf(Error);
-        });
+      const uploadError = new Error('pdf upload failed');
+      uploadError.response = {
+        data: {
+          sensitive: 'do-not-log'
+        }
+      };
+      pdfSaveStub.rejects(uploadError);
+      return instance.save(req, res, mockLocals).catch(err => {
+        fvSaveStub.should.not.have.been.called;
+        err.should.be.instanceOf(Error);
+        req.log.should.have.been.calledWithExactly(
+          'error',
+          'ukviet.upload_pdf.filevault.error',
+          'pdf upload failed'
+        );
+      });
     });
 
     it('should throw an error if there is an issue with saving to filevault', () => {
-      fvSaveStub.rejects();
-      return instance.save(req, res, mockLocals)
-        .catch(err => {
-          pdfSaveStub.should.have.been.calledOnce;
-          err.should.be.instanceOf(Error);
-        });
+      const saveError = new Error('filevault save failed');
+      saveError.response = {
+        data: {
+          sensitive: 'do-not-log'
+        }
+      };
+      fvSaveStub.rejects(saveError);
+      return instance.save(req, res, mockLocals).catch(err => {
+        pdfSaveStub.should.have.been.calledOnce;
+        err.should.be.instanceOf(Error);
+        req.log.should.have.been.calledWithExactly(
+          'error',
+          'ukviet.upload_pdf.filevault.error',
+          'filevault save failed'
+        );
+      });
     });
   });
 });

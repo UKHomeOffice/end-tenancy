@@ -1,4 +1,3 @@
-
 describe('Send Email Behaviour', () => {
   const mockData = '<html></html>';
 
@@ -28,10 +27,12 @@ describe('Send Email Behaviour', () => {
       bufferData = Buffer.from(mockData);
       cbStub = sinon.stub();
       req = request();
+      req.log = sinon.stub();
       res = response();
       saveStub = sinon.stub();
 
-      saveStub.withArgs(req, res, 'superLocals')
+      saveStub
+        .withArgs(req, res, 'superLocals')
         .resolves({ pdfData: bufferData, fvLink: 'test-link' });
 
       pdfUploadMock = sinon.stub().returns({ save: saveStub });
@@ -63,12 +64,15 @@ describe('Send Email Behaviour', () => {
         }
       }
 
-      const Behaviour = proxyquire('../apps/end-tenancy/behaviours/send-email', {
-        fs: fsMock,
-        '../../../lib/utils': notifyClientMock,
-        '../../../config': configMock,
-        '../models/upload-pdf': pdfUploadMock
-      });
+      const Behaviour = proxyquire(
+        '../apps/end-tenancy/behaviours/send-email',
+        {
+          fs: fsMock,
+          '../../../lib/utils': notifyClientMock,
+          '../../../config': configMock,
+          '../models/upload-pdf': pdfUploadMock
+        }
+      );
 
       const SendEmail = Behaviour(Base);
 
@@ -162,6 +166,74 @@ describe('Send Email Behaviour', () => {
       sendEmailStub.should.have.been.calledTwice;
       cbStub.should.have.been.calledOnce;
       cbStub.firstCall.args[0].should.be.instanceOf(Error);
+    });
+
+    it('should log only the error message when uploadPDF fails in successHandler', async () => {
+      const uploadError = new Error('upload failed');
+      uploadError.response = {
+        data: {
+          sensitive: 'do-not-log'
+        }
+      };
+      saveStub.withArgs(req, res, 'superLocals').rejects(uploadError);
+
+      await instance.successHandler(req, res, cbStub);
+
+      req.log.should.have.been.calledWithExactly(
+        'error',
+        'ukviet.submit_form.error',
+        'upload failed'
+      );
+      cbStub.should.have.been.calledOnce;
+      cbStub.firstCall.args[0].should.be.instanceOf(Error);
+    });
+
+    it('should log only notify error message when caseworker email fails', async () => {
+      sendEmailStub.rejects({
+        response: {
+          data: {
+            errors: [
+              {
+                message: 'notify caseworker failed',
+                detail: 'sensitive detail'
+              }
+            ]
+          }
+        }
+      });
+
+      await instance.successHandler(req, res, cbStub);
+
+      req.log.should.have.been.calledWithExactly(
+        'error',
+        'ukviet.submit_form.create_email_with_file_notify.error',
+        'notify caseworker failed'
+      );
+      cbStub.should.have.been.calledOnce;
+    });
+
+    it('should log only notify error message when customer email fails', async () => {
+      sendEmailStub.onSecondCall().rejects({
+        response: {
+          data: {
+            errors: [
+              {
+                message: 'notify customer failed',
+                detail: 'sensitive detail'
+              }
+            ]
+          }
+        }
+      });
+
+      await instance.successHandler(req, res, cbStub);
+
+      req.log.should.have.been.calledWithExactly(
+        'error',
+        'ukviet.send_customer_email.create_email_notify.error',
+        'notify customer failed'
+      );
+      cbStub.should.have.been.calledOnce;
     });
   });
 });
