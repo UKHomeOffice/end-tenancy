@@ -7,6 +7,6 @@ export class ukvietConfirmationPage extends basePage {
   }
 
   async assertAlertText(text: string): Promise<void> {
-    await expect(this.page.getByRole('heading', { level: 1, name: text })).toBeVisible();
+    await expect(this.page.locator('[class="govuk-panel__title"]')).toHaveText(text);
   }
 }
