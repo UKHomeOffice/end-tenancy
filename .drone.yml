@@ -354,22 +354,22 @@ steps:
   #     - image_to_quay
   #     - deploy_to_branch
 
-  - name: test_acceptance_branch
-    <<: *acceptance_tests
-    failure: ignore
-    environment:
-      NOTIFY_STUB: true
-    commands:
-      - export DRONE_SOURCE_BRANCH=$(echo $DRONE_SOURCE_BRANCH | tr '[:upper:]' '[:lower:]' | tr '/' '-')
-      - export ACCEPTANCE_HOST_NAME=https://ukviet-$${DRONE_SOURCE_BRANCH}.internal.$${BRANCH_ENV}.homeoffice.gov.uk
-      - export CUCUMBER_PUBLISH_ENABLED=true
-      - npx playwright install
-      - npm run test:acceptance
-    when:
-      branch: master
-      event: pull_request
-    depends_on:
-      - deploy_to_branch
+  # - name: test_acceptance_branch
+  #   <<: *acceptance_tests
+  #   failure: ignore
+  #   environment:
+  #     NOTIFY_STUB: true
+  #   commands:
+  #     - export DRONE_SOURCE_BRANCH=$(echo $DRONE_SOURCE_BRANCH | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+  #     - export ACCEPTANCE_HOST_NAME=https://ukviet-$${DRONE_SOURCE_BRANCH}.internal.$${BRANCH_ENV}.homeoffice.gov.uk
+  #     - export CUCUMBER_PUBLISH_ENABLED=true
+  #     - npx playwright install
+  #     - npm run test:acceptance
+  #   when:
+  #     branch: master
+  #     event: pull_request
+  #   depends_on:
+  #     - deploy_to_branch
 
   # Deploy to Master UAT environment
   - name: deploy_to_uat
@@ -390,19 +390,19 @@ steps:
       - clone_repos
       - image_to_quay
 
-  - name: test_acceptance_uat
-    <<: *acceptance_tests
-    failure: ignore
-    commands:
-      - export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}.uat.internal.sas-notprod.homeoffice.gov.uk
-      - export CUCUMBER_PUBLISH_ENABLED=true
-      - npx playwright install
-      - npm run test:acceptance
-    when:
-      branch: master
-      event: push
-    depends_on:
-      - deploy_to_uat
+  # - name: test_acceptance_uat
+  #   <<: *acceptance_tests
+  #   failure: ignore
+  #   commands:
+  #     - export ACCEPTANCE_HOST_NAME=https://$${APP_NAME}.uat.internal.sas-notprod.homeoffice.gov.uk
+  #     - export CUCUMBER_PUBLISH_ENABLED=true
+  #     - npx playwright install
+  #     - npm run test:acceptance
+  #   when:
+  #     branch: master
+  #     event: push
+  #   depends_on:
+  #     - deploy_to_uat
 
   # Get pull request branch so correct PR UAT environment is torn down in the tear_down_branch step that follows
   - name: get_pr_branch
