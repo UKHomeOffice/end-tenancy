@@ -1,0 +1,19 @@
+{{ if and (eq .REDIS_PERSISTENCE_ENABLED "true") (or (eq .KUBE_NAMESPACE .STG_ENV) (eq .KUBE_NAMESPACE .PROD_ENV)) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  {{ if ne .REDIS_PERSISTENCE_ANNOTATIONS_FILE "" }}
+  annotations:
+{{ file .REDIS_PERSISTENCE_ANNOTATIONS_FILE | indent 4 }}
+  {{ end }}
+spec:
+  accessModes:
+    - {{ .REDIS_PERSISTENCE_ACCESS_MODES }}
+  {{ if and (ne .REDIS_PERSISTENCE_STORAGE_CLASS "") (ne .REDIS_PERSISTENCE_STORAGE_CLASS "null") }}
+  storageClassName: {{ .REDIS_PERSISTENCE_STORAGE_CLASS }}
+  {{ end }}
+  resources:
+    requests:
+      storage: {{ .REDIS_PERSISTENCE_SIZE }}
+{{ end }}
