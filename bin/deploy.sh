@@ -14,6 +14,12 @@ redis_runtime_files='kube/redis/redis-service.yml -f kube/redis/redis-network-po
 
 kd='kd --insecure-skip-tls-verify --timeout 10m --check-interval 10s'
 
+export REDIS_PERSISTENCE_ENABLED=${REDIS_PERSISTENCE_ENABLED:-false}
+export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
+export REDIS_PERSISTENCE_ACCESS_MODES=${REDIS_PERSISTENCE_ACCESS_MODES:-ReadWriteOnce}
+export REDIS_PERSISTENCE_STORAGE_CLASS=${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted-eu-west-2b}
+export REDIS_PERSISTENCE_ANNOTATIONS_FILE=${REDIS_PERSISTENCE_ANNOTATIONS_FILE:-}
+
 sanitize_branch_name() {
   echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
 }
@@ -21,6 +27,7 @@ sanitize_branch_name() {
 if [[ $1 == 'tear_down' ]]; then
   export KUBE_NAMESPACE=$BRANCH_ENV
   export DRONE_SOURCE_BRANCH=$(sanitize_branch_name "$(cat /root/.dockersock/branch_name.txt)")
+  export REDIS_PERSISTENCE_ENABLED=false
 
   if [[ -z "$DRONE_SOURCE_BRANCH" ]]; then
     echo "Unable to tear down branch environment: DRONE_SOURCE_BRANCH is empty"
@@ -43,10 +50,6 @@ if [[ ${KUBE_NAMESPACE} == ${STG_ENV} || ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; th
 else
   export REDIS_PERSISTENCE_ENABLED=false
 fi
-export REDIS_PERSISTENCE_ACCESS_MODES=${REDIS_PERSISTENCE_ACCESS_MODES:-ReadWriteOnce}
-export REDIS_PERSISTENCE_STORAGE_CLASS=${REDIS_PERSISTENCE_STORAGE_CLASS:-gp2-encrypted-eu-west-2b}
-export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
-export REDIS_PERSISTENCE_ANNOTATIONS_FILE=${REDIS_PERSISTENCE_ANNOTATIONS_FILE:-}
 
 if [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
   export REDIS_PERSISTENCE_SIZE=10Gi
