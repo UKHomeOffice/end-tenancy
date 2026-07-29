@@ -28,7 +28,7 @@ if [[ $1 == 'tear_down' ]]; then
   fi
 
   $kd --delete -f kube/configmaps/configmap.yml
-  delete_redis
+  $kd --delete -f kube/redis
   $kd --delete -f kube/html-pdf -f kube/file-vault -f kube/app
   echo "Torn Down Branch - ukviet-$DRONE_SOURCE_BRANCH.internal.$BRANCH_ENV.homeoffice.gov.uk"
   exit 0
@@ -49,7 +49,7 @@ export REDIS_PERSISTENCE_EXISTING_CLAIM=${REDIS_PERSISTENCE_EXISTING_CLAIM:-}
 export REDIS_PERSISTENCE_ANNOTATIONS_FILE=${REDIS_PERSISTENCE_ANNOTATIONS_FILE:-}
 
 if [[ ${KUBE_NAMESPACE} == ${PROD_ENV} ]]; then
-  export REDIS_PERSISTENCE_SIZE=5Gi
+  export REDIS_PERSISTENCE_SIZE=10Gi
 else
   export REDIS_PERSISTENCE_SIZE=1Gi
 fi
