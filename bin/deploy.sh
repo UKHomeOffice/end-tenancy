@@ -28,7 +28,7 @@ if [[ $1 == 'tear_down' ]]; then
   fi
 
   $kd --delete -f kube/configmaps/configmap.yml
-  delete_redis
+  $kd --delete -f kube/redis
   $kd --delete -f kube/html-pdf -f kube/file-vault -f kube/app
   echo "Torn Down Branch - ukviet-$DRONE_SOURCE_BRANCH.internal.$BRANCH_ENV.homeoffice.gov.uk"
   exit 0
