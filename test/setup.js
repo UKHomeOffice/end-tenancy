@@ -9,7 +9,7 @@ process.env.NOTIFY_STUB = 'true';
 const reqres = require('hof').utils.reqres;
 
 const chai = require('chai');
-const useChaiPlugin = (pluginModule) => {
+const useChaiPlugin = pluginModule => {
   const plugin = pluginModule && (pluginModule.default || pluginModule);
   chai.use(plugin);
 };
