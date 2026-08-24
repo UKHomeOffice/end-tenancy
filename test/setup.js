@@ -8,10 +8,16 @@ process.env.NOTIFY_STUB = 'true';
 
 const reqres = require('hof').utils.reqres;
 
-global.chai = require('chai')
-  .use(require('sinon-chai'))
-  .use(require('chai-as-promised'))
-  .use(require('chai-subset'));
+const chai = require('chai');
+const useChaiPlugin = (pluginModule) => {
+  const plugin = pluginModule && (pluginModule.default || pluginModule);
+  chai.use(plugin);
+};
+
+useChaiPlugin(require('sinon-chai'));
+useChaiPlugin(require('chai-as-promised'));
+useChaiPlugin(require('chai-subset'));
+global.chai = chai;
 global.should = chai.should();
 global.expect = chai.expect;
 global.assert = require('assert');
