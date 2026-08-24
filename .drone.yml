@@ -278,6 +278,10 @@ steps:
       - name: dockersock
         path: /root/.dockersock
     commands:
+      - npm install -g n
+      - n 24.19.0
+      - hash -r
+      - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - test -s /root/.dockersock/branch_url.txt || (echo "Missing deployed branch URL at /root/.dockersock/branch_url.txt" && exit 1)
@@ -644,6 +648,10 @@ steps:
       - name: dockersock
         path: /root/.dockersock
     commands:
+      - npm install -g n
+      - n 24.19.0
+      - hash -r
+      - node --version
       - yarn install --frozen-lockfile
       - yarn playwright install --with-deps
       - |
