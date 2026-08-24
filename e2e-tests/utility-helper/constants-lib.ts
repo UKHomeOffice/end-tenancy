@@ -23,7 +23,7 @@ export const ConstantsLib = {
   D_TOWN_OR_CITY: 'Bristol',
   D_POSTCODE: 'BS11 9AX',
   TELEPHONE: '01616699548',
-  CONTACT_EMAIL_ADDRESS: 'sas-hof-test@digital.homeoffice.gov.uk',
+  CONTACT_EMAIL_ADDRESS: 'name@example.com',
   LANDLORD_EMAIL: 'Landlord.TestEmail@digital.homeoffice.gov.uk',
   DOB_1978: '01/01/1978',
   NATIONALITY: 'Spain',

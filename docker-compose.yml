@@ -8,7 +8,7 @@ services:
       - REDIS_PORT=6379
       - SESSION_SECRET=123456789
       - PDF_CONVERTER_URL=http://html-pdf-converter:8001/convert
-      - CASEWORKER_EMAIL=sas-hof-test@digital.homeoffice.gov.uk
+      - CASEWORKER_EMAIL=name@example.com
     links:
       - redis
       - html-pdf-converter
@@ -37,7 +37,7 @@ services:
       - app
 
   html-pdf-converter:
-    image: quay.io/ukhomeofficedigital/html-pdf-converter:01442cbca45c8c1965a64f680d8fab95998e5238
+    image: quay.io/ukhomeofficedigital/html-pdf-converter:3.1.1@sha256:ac87462085d39530158421d6c85111d18e4aa3df3ecf47368f589159da9277ad
     environment:
       - CHROME_HOST=chrome
     ports:
