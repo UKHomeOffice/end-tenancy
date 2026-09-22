@@ -70,5 +70,11 @@
     "require": "test/setup.js",
     "recursive": "true",
     "timeout": "6000"
+  },
+  "resolutions": {
+    "js-yaml": "^4.3.2",
+    "morgan": "^1.12.0",
+    "qs": "^6.16.0",
+    "serialize-javascript": "^7.0.5"
   }
 }
