@@ -522,7 +522,7 @@
     class-transformer "0.5.1"
     reflect-metadata "0.2.2"
 
-"@cucumber/pretty-formatter@4.1.0":
+"@cucumber/pretty-formatter@4.1.0", "@cucumber/pretty-formatter@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@cucumber/pretty-formatter/-/pretty-formatter-4.1.0.tgz#6d236726a9c96dce21074b425db7673d55292477"
   integrity sha512-cbdb494+X3nHxvP34sbyia7CeVIkqs0K3+LWpsF8szCSUVYOxhmbP66H/Yd7f6yr2BhKLmkDokyEX24VAyOstA==
@@ -530,25 +530,10 @@
     "@cucumber/query" "16.1.1"
     luxon "^3.7.2"
 
-"@cucumber/pretty-formatter@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@cucumber/pretty-formatter/-/pretty-formatter-2.4.1.tgz#bfa2595244eab3f9cf7f38aecf6f223d15d985de"
-  integrity sha512-HomNZWTO7CqP44PNHOtguPqpHteIKzxyZNjFiuWKUXJ+DDTwLcdlBY2gIuP4BxEt9Q5AMu4ahde2Syo1elmTJQ==
-  dependencies:
-    "@cucumber/query" "^14.0.0"
-
 "@cucumber/query@16.1.1":
   version "16.1.1"
   resolved "https://registry.yarnpkg.com/@cucumber/query/-/query-16.1.1.tgz#87797dacb4dbccce53f7a8ff55e642bcf060a37d"
   integrity sha512-SBaP4Lc7xv55jY78Q8raoxvbBIPGhQKrui/Tq+l6jYBl1alV0TG1sW8TRtk9W7RQl27nVJo9DyyvASp374L9Tg==
-  dependencies:
-    "@teppeis/multimaps" "3.0.0"
-    lodash.sortby "^4.7.0"
-
-"@cucumber/query@^14.0.0":
-  version "14.7.0"
-  resolved "https://registry.yarnpkg.com/@cucumber/query/-/query-14.7.0.tgz#551ac7657e293ab57c661dfc0a7a7cbc9d6d9923"
-  integrity sha512-fiqZ4gMEgYjmbuWproF/YeCdD5y+gD2BqgBIGbpihOsx6UlNsyzoDSfO+Tny0q65DxfK+pHo2UkPyEl7dO7wmQ==
   dependencies:
     "@teppeis/multimaps" "3.0.0"
     lodash.sortby "^4.7.0"
@@ -1693,7 +1678,7 @@ body-parser@^2.3.0:
     raw-body "^3.0.2"
     type-is "^2.1.0"
 
-boolean@*, boolean@^3.0.1:
+boolean@^3.0.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/boolean/-/boolean-3.2.0.tgz#9e5294af4e98314494cbb17979fa54ca159f116b"
   integrity sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==
@@ -2935,11 +2920,6 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
-
-fast-printf@^1.6.9:
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/fast-printf/-/fast-printf-1.6.10.tgz#c44ad871726152159d7a903a5af0d65cf3d75875"
-  integrity sha512-GwTgG9O4FVIdShhbVF3JxOgSBY2+ePGsu2V/UONgoCPzF9VY6ZdBMKsHKCYQHZwNk3qNouUolRDsgVxcVA5G1w==
 
 fastq@^1.6.0:
   version "1.20.3"
@@ -5353,15 +5333,6 @@ rndm@1.2.0:
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
   integrity sha512-fJhQQI5tLrQvYIYFpOnFinzv9dwmR7hRnUz1XqP3OJ1jIweTNOd6aTO4jwQSgcBSFUB+/KHJxuGneime+FdzOw==
 
-roarr@*:
-  version "7.21.7"
-  resolved "https://registry.yarnpkg.com/roarr/-/roarr-7.21.7.tgz#b77c762660378234e1370c3e333596a744c0f6b1"
-  integrity sha512-6X9ID9jb83kPkDxm5xLb9rZdGm6ksdDjpeL0iW5weKelJFi+NVBSowRpEuH8CdpX2x+7RW0TZaezibE7yQB7pg==
-  dependencies:
-    fast-printf "^1.6.9"
-    safe-stable-stringify "^2.4.3"
-    semver-compare "^1.0.0"
-
 roarr@^2.15.3:
   version "2.15.4"
   resolved "https://registry.yarnpkg.com/roarr/-/roarr-2.15.4.tgz#f5fe795b7b838ccfe35dc608e0282b9eba2e7afd"
@@ -5465,7 +5436,7 @@ safe-regex-test@^1.1.0:
     es-errors "^1.3.0"
     is-regex "^1.2.1"
 
-safe-stable-stringify@^2.3.1, safe-stable-stringify@^2.4.3:
+safe-stable-stringify@^2.3.1:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/safe-stable-stringify/-/safe-stable-stringify-2.5.0.tgz#4ca2f8e385f2831c432a719b108a3bf7af42a1dd"
   integrity sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==
